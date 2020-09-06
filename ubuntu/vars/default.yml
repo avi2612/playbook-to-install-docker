@@ -1,0 +1,11 @@
+---
+  
+ packages: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+
+ container_image: busybox
+
+ container_name: avi_container
+
+ container_command: sleep 300
+
+ containers: 2

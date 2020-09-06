@@ -1,0 +1,9 @@
+---
+  
+ container_image: busybox
+
+ container_name: avi_container
+
+ container_command: sleep 300
+
+ containers: 2

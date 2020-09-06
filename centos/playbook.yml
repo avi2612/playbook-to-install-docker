@@ -1,0 +1,63 @@
+---
+ - name: Install docker
+   gather_facts: false
+   become: true
+   vars_files:
+     vars/default.yml    
+   hosts: centos1
+   tasks:
+    - name: Install yum utilts
+      yum:
+       name: yum-utils
+       state: latest
+
+    - name: Install device-mapper-persistent-data
+      yum:
+       name: "{{ item }}"
+       state: latest 
+      with_items:
+       - "device-mapper-persistent-data"
+       - "lvm2"
+       - "epel-release"
+
+    - name: Add docker repo
+      get_url:
+       url: https://download.docker.com/linux/centos/docker-ce.repo
+       dest: /etc/yum.repos.d/docker-ce.repo
+
+    - name: Install Docker
+      yum:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - "python2-pip"
+        - "docker-ce"
+
+    - name: Install Docker Module for Python
+      pip:
+       name: docker
+ 
+    - name: starting and enabling docker
+      service:
+       name: docker
+       state: started
+       enabled: true
+
+    - name: Add user avi to docker group
+      user:
+        name: avi
+        groups: docker
+        append: yes
+
+#    - name: Pull default Docker image
+#      docker_image:
+#       name: "{{ container_image }}"
+#       source: pull
+ 
+#    - name: Create default containers
+#      docker_container:
+#       name: "{{ container_name }}{{ item }}"
+#       image: "{{ container_image }}"
+#       command: "{{ container_command }}"
+#       state: present
+#      with_sequence: count={{ containers }}
